@@ -1,0 +1,76 @@
+grammar edu.unq.obj3.FobalClase with org.eclipse.xtext.common.Terminals
+
+generate fobalClase "http://www.unq.edu/obj3/FobalClase"
+
+Campeonato:
+	equipos+=Equipo
+	(equipos+=Equipo)+
+	(fechas+=Fecha)+
+;
+
+
+Equipo:
+	'equipo' name=ID
+;
+
+Fecha:
+	'fecha' numero=INT '{' 
+	(partidos+=Partido)*
+	'}'
+;
+
+Partido:
+	resultado=Resultado (tarjetas=InfoTarjetas)?
+;
+
+Resultado:
+	ResultadoCompacto | ResultadoGano | ResultadoPerdio 
+;
+
+ResultadoCompacto:
+	local=[Equipo] golesLocal=INT 
+	visitante=[Equipo] golesVisitante=INT
+;
+
+ResultadoGano:
+	ganador=[Equipo] 'le gano de' 
+	(ganoElLocal?='local'|ganoElVisitante?='visitante')
+	'a'
+	perdedor=[Equipo]
+	golesGanador=INT
+	'a'
+	golesPerdedor=INT 
+;
+
+ResultadoPerdio returns ResultadoGano:
+	perdedor=[Equipo] 'perdio de'
+	(ganoElVisitante?='local'|ganoElLocal?='visitante')
+	'con'
+	ganador=[Equipo]
+	golesPerdedor=INT 
+	'a'
+	golesGanador=INT
+;
+
+InfoTarjetas:
+	HuboTarjetas | NoHuboTarjetas
+;
+
+HuboTarjetas:
+	'hubo' amarillas=INT 'tarjetas amarillas y' 
+	(rojas=INT 'rojas' | noHuboRojas?='ninguna roja') 
+;
+
+NoHuboTarjetas:
+	{NoHuboTarjetas} 'no hubo tarjetas'
+;
+
+
+
+
+
+
+
+
+
+

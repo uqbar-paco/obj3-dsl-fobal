@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="edu.unq.obj3.fobalClase.sdk"
+	label="FobalClase SDK Feature "
+	version="1.0.0.qualifier">
+	<plugin
+			id="edu.unq.obj3.fobalClase"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+	<plugin
+			id="edu.unq.obj3.fobalClase.ui"
+			download-size="0"
+			install-size="0"
+			version="0.0.0"
+			unpack="false"/>
+</feature>

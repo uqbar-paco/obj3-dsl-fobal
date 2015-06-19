@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: edu.unq.obj3.fobalClase
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: edu.unq.obj3.fobalClase; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext;visibility:=reexport,
+ org.eclipse.xtext.xbase;resolution:=optional;visibility:=reexport,
+ org.eclipse.xtext.generator;resolution:=optional,
+ org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.eclipse.xtext.xbase.lib,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types,
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: edu.unq.obj3,
+ edu.unq.obj3.services,
+ edu.unq.obj3.fobalClase,
+ edu.unq.obj3.fobalClase.impl,
+ edu.unq.obj3.fobalClase.util,
+ edu.unq.obj3.serializer,
+ edu.unq.obj3.parser.antlr,
+ edu.unq.obj3.parser.antlr.internal,
+ edu.unq.obj3.validation,
+ edu.unq.obj3.scoping,
+ edu.unq.obj3.generator,
+ edu.unq.obj3.formatting
