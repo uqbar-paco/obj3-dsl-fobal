@@ -25,6 +25,28 @@ class ResultadoExtensions {
 	static def dispatch gano(ResultadoGano resu, Equipo equipo) {
 		equipo.equals(resu.ganador) 
 	}
+
+	static def dispatch equipoLocal(ResultadoCompacto resu) {
+		resu.local
+	}
+
+	static def dispatch equipoVisitante(ResultadoCompacto resu) {
+		resu.visitante
+	}
+	
+	static def dispatch equipoLocal(ResultadoGano resu) {
+		if (resu.ganoElLocal) 
+			resu.ganador
+		else
+			resu.perdedor
+	}
+	
+	static def dispatch equipoVisitante(ResultadoGano resu) {
+		if (resu.ganoElVisitante) 
+			resu.ganador
+		else
+			resu.perdedor
+	}
 	
 }
 

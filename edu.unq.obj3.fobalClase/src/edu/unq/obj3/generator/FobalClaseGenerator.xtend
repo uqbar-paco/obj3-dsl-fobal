@@ -18,15 +18,14 @@ import static extension edu.unq.obj3.model.EquipoExtensions.*
 class FobalClaseGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		val nombres = resource.allContents.
-			filter(Equipo).
-			map [ equipo | equipo.name ].toList.sort
-	
+		val equipos = resource.allContents.
+			filter(Equipo).toList.sortBy[ name ]
+			
 		fsa.generateFile(
 		'equipos.txt',
 		'''Estos son los equipos:
-«FOR nombre: nombres»
-- «nombre»
+«FOR equipo: equipos»
+- «equipo.name» hizo «equipo.puntos»
 «ENDFOR»
 '''
 		) 

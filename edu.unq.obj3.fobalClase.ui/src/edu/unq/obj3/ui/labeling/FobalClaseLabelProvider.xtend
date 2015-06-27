@@ -4,20 +4,50 @@
 package edu.unq.obj3.ui.labeling
 
 import com.google.inject.Inject
+import edu.unq.obj3.fobalClase.Fecha
+import edu.unq.obj3.fobalClase.Partido
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+
+import static extension edu.unq.obj3.model.ResultadoExtensions.*
 
 /**
  * Provides labels for a EObjects.
  * 
  * see http://www.eclipse.org/Xtext/documentation.html#labelProvider
  */
-class FobalClaseLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class FobalClaseLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 
 	// Labels and icons can be computed like this:
+
+	def text(Fecha fecha) {
+		if (fecha.numero == 0)
+			"fecha sin numero asignado"
+		else
+			"fecha " + fecha.numero + " baby"
+	}	
+	
+	def text(Partido partido) {
+		try {
+			if (partido.resultado == null) return 'Partido'
+			val local = partido.resultado.equipoLocal
+			val visitante = partido.resultado.equipoVisitante
+			if (local == null && visitante == null) return 'Partido'
+			if (local != null && visitante == null) return '''Partido: «local.name» vs. ?''' 
+			if (local == null && visitante != null) return '''Partido: «visitante.name» vs. ?'''
+			if (local != null && visitante != null) return '''Partido: «local.name» vs. «visitante.name»'''
+		} catch (Throwable t) {
+			'Hubo una excepcion: ' + t.getText
+		}
+	}
+	
+	
+	
 	
 //	def text(Greeting ele) {
 //		'A greeting to ' + ele.name
