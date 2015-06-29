@@ -3,10 +3,73 @@
  */
 package edu.unq.obj3.ui.contentassist
 
-import edu.unq.obj3.ui.contentassist.AbstractFobalClaseProposalProvider
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.RuleCall
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.jface.text.contentassist.ICompletionProposal
+import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
+import org.eclipse.jface.text.contentassist.ICompletionListener
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
  */
-class FobalClaseProposalProvider extends AbstractFobalClaseProposalProvider {
+class FobalClaseProposalProvider 
+extends AbstractFobalClaseProposalProvider {
+	
+	override void completeResultadoCompacto_GolesLocal(
+		EObject model, 
+		Assignment assignment, 
+		ContentAssistContext context, 
+		ICompletionProposalAcceptor acceptor
+	) {
+		super.completeResultadoCompacto_GolesLocal(
+			model, assignment, context, acceptor
+		)
+		
+		acceptor.accept(
+			createCompletionProposal("le gano de local a", context)
+			.withPriority(5000))
+
+		acceptor.accept(
+			createCompletionProposal("le gano de visitante a", context)
+			.withPriority(10000))
+		acceptor.accept(createCompletionProposal(
+			"perdio de local con", context).withPriority(15000))
+		acceptor.accept(createCompletionProposal(
+			"perdio de visitante con", context).withPriority(20000))
+		
+		// agregamos lo que queremos
+//		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
+	}
+	
+	def dispatch withPriority(ICompletionProposal proposal, int pri) {
+		proposal
+	}
+
+	def dispatch withPriority(ConfigurableCompletionProposal proposal, int pri) {
+		proposal.priority = pri
+		proposal
+	}
+	
+	def dispatch withPriority(Void proposal, int pri) {
+		null as ICompletionProposal
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
