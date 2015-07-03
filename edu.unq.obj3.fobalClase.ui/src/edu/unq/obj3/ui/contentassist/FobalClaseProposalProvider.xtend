@@ -4,13 +4,13 @@
 package edu.unq.obj3.ui.contentassist
 
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.text.contentassist.ICompletionProposal
 import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.RuleCall
+import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
-import org.eclipse.jface.text.contentassist.ICompletionProposal
-import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
-import org.eclipse.jface.text.contentassist.ICompletionListener
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -28,10 +28,10 @@ extends AbstractFobalClaseProposalProvider {
 			model, assignment, context, acceptor
 		)
 		
+		// opciones de ResultadoGano y ResultadoPerdio
 		acceptor.accept(
 			createCompletionProposal("le gano de local a", context)
 			.withPriority(5000))
-
 		acceptor.accept(
 			createCompletionProposal("le gano de visitante a", context)
 			.withPriority(10000))
@@ -40,10 +40,55 @@ extends AbstractFobalClaseProposalProvider {
 		acceptor.accept(createCompletionProposal(
 			"perdio de visitante con", context).withPriority(20000))
 		
-		// agregamos lo que queremos
-//		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
+		// opcion de ResultadoStandard - n - goles de xxx
+		val equipo = context.getCurrentNode().getPreviousSibling()
+		val nombreEquipo = context.getDocument().get(
+			equipo.offset,equipo.length
+		)
+		val proposal = createCompletionProposal(
+		"n", '''n - goles de «nombreEquipo»''', null, context)
+			.withPriority(5000)
+			.makeEditable(context) 
+		acceptor.accept(proposal)
 	}
+
+
+	/*
+	 * Methods to avoid undesired assists
+	 */
+	override void complete_INT(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		var mustAvoid = false
+		if (ruleCall.eContainer instanceof Assignment) {
+			mustAvoid = (ruleCall.eContainer as Assignment).feature == 'golesLocal'
+		} 
+		if (!mustAvoid) {
+			super.complete_INT(model, ruleCall, context, acceptor)
+		} 
+	} 	
+
+	override void completeKeyword(Keyword keyword, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		var mustAvoid = (keyword.getValue() == 'le gano de') || (keyword.getValue() == 'perdio de') 
+		if (!mustAvoid) {
+			super.completeKeyword(keyword, context, acceptor)
+		} 
+	}
+
+
 	
+	/*
+	 * some convenience methods to edit proposals
+	 */
+	static def makeEditable(ICompletionProposal proposal, ContentAssistContext context) {
+		if (proposal instanceof ConfigurableCompletionProposal) {
+			val configurable = proposal as ConfigurableCompletionProposal;
+			configurable.setSelectionStart(configurable.replacementOffset);
+			configurable.setSelectionLength(configurable.replacementString.length);
+			configurable.setAutoInsertable(false);
+			configurable.setSimpleLinkedMode(context.getViewer(), '\t', ' ');
+		}
+		proposal
+	}
+
 	def dispatch withPriority(ICompletionProposal proposal, int pri) {
 		proposal
 	}
